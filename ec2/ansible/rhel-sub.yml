@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  sudo: yes
+  become: yes
   vars_files:
       - rhel-sub-vars.yml     
   tasks:
@@ -26,5 +26,13 @@
       lineinfile: dest=/etc/hosts state=present insertafter=EOF line='209.132.182.33   repository.jboss.org'
     - name: subscribe RHN
       redhat_subscription: state=present username='{{ username }}' password='{{ password }}' autosubscribe=true pool='{{ pool_id }}'
-    - name: disable all repos by default
-      shell: subscription-manager repos --disable="*"
+      # Master /etc/hosts
+    - name: add hostnames nodes & master to etc hosts
+      lineinfile: dest=/etc/hosts state=present insertafter=EOF line='{{ hostvars['master.ose.cloudworks.io'].ansible_eth0.ipv4.address }}   master.ose.cloudworks.io'
+      # Nodes /etc/hosts
+    - name: add hostnames nodes & master to etc hosts
+      lineinfile: dest=/etc/hosts state=present insertafter=EOF line='{{ hostvars['node.0.ose.cloudworks.io'].ansible_eth0.ipv4.address }}   node.0.ose.cloudworks.io'
+    - name: add hostnames nodes & master to etc hosts
+      lineinfile: dest=/etc/hosts state=present insertafter=EOF line='{{ hostvars['node.1.ose.cloudworks.io'].ansible_eth0.ipv4.address }}   node.1.ose.cloudworks.io'
+
+
