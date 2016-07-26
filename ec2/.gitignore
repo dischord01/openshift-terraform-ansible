@@ -36,6 +36,7 @@ terraform.tfvars
 # rhel
 ############
 rhel-sub-vars.yml
+*.retry
 
 
 ###########
